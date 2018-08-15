@@ -27,10 +27,11 @@ data(canada.cities, package = "maps")
 viz <- ggplot(canada.cities, aes(long, lat)) + borders(regions = "canada") + coord_equal() + geom_point(aes(text = name, size = pop), colour = "red", alpha = 1/2)
 ggplotly(viz, tooltip = c("text", "size"))
 
+map('county', 'iowa', fill = TRUE, col = palette())
+
 library("RODBC")
 con2 <- odbcDriverConnect(connection = "Driver={SQL Server Native Client 11.0};server= 94.232.174.3, 1436;database=ShopingSales;UID=WebLogin;PWD=Ramezan@$#hamed20me")
 
-data <- sqlFetch(con2, "ComGeo")
 sqlDf <- sqlQuery(con2
                   , "Select ComGeo.GeoType, ComComboItem.Dscp GeoTypeDscp, Count(*) as CN 
                      From ComGeo 
