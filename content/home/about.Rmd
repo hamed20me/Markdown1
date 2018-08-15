@@ -15,9 +15,6 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
-```
 
 ## Including Plots
 
@@ -29,6 +26,28 @@ library(plotly)
 data(canada.cities, package = "maps")
 viz <- ggplot(canada.cities, aes(long, lat)) + borders(regions = "canada") + coord_equal() + geom_point(aes(text = name, size = pop), colour = "red", alpha = 1/2)
 ggplotly(viz, tooltip = c("text", "size"))
+
+library("RODBC")
+con2 <- odbcDriverConnect(connection = "Driver={SQL Server Native Client 11.0};server= 94.232.174.3, 1436;database=ShopingSales;UID=WebLogin;PWD=Ramezan@$#hamed20me")
+
+data <- sqlFetch(con2, "ComGeo")
+sqlDf <- sqlQuery(con2
+                  , "Select ComGeo.GeoType, ComComboItem.Dscp GeoTypeDscp, Count(*) as CN 
+                     From ComGeo 
+                     Left Outer Join ComComboItem On ComGeo.GeoType = ComComboItem.ItemIndex and ComComboItem.FieldName='GeoType'
+                     Group By ComGeo.GeoType, ComComboItem.Dscp
+                     Order By ComGeo.GeoType")
+
+attach(data)
+names(data)
+GeoName[1:10]
+levels(GeoStatus)
+
+library(ggplot2)
+geoDf <- ggplot(data=sqlDf, aes(x=sqlDf$GeoTypeDscp, y=sqlDf$CN))                        
+geoBar <- geoDf + geom_bar(stat = "identity") + xlab('منطقه')+ylab('تعداد')
+geoBar
+
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
