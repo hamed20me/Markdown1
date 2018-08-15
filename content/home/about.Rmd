@@ -38,11 +38,6 @@ sqlDf <- sqlQuery(con2
                      Group By ComGeo.GeoType, ComComboItem.Dscp
                      Order By ComGeo.GeoType")
 
-attach(data)
-names(data)
-GeoName[1:10]
-levels(GeoStatus)
-
 library(ggplot2)
 geoDf <- ggplot(data=sqlDf, aes(x=sqlDf$GeoTypeDscp, y=sqlDf$CN))                        
 geoBar <- geoDf + geom_bar(stat = "identity") + xlab('منطقه')+ylab('تعداد')
